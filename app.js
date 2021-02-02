@@ -21,6 +21,8 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+app.use(express.urlencoded({ extended: true }));  //this will allow the body from our post request to be parced
+
 app.get('/', (req, res) => {
     res.render('home');
 });
@@ -35,7 +37,9 @@ app.get('/campgrounds/new', (req, res) => {
 });
 
 app.post('/campgrounds', async (req, res) => {
-    res.send(req.body);
+    const campground = new Campground(req.body.campground);
+    await campground.save();
+    res.redirect(`/campgrounds/${campground._id}`);
 })
 
 app.get('/campgrounds/:id', async (req, res) => {
