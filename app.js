@@ -3,6 +3,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
 const catchAsync = require('./utilities/catchAsync');
+const ExpressError = require('./utilities/ExpressError');
 const methodOverride = require('method-override');
 const Campground = require('./models/Campground');
 
@@ -41,6 +42,7 @@ app.get('/campgrounds/new', (req, res) => {
 });
 
 app.post('/campgrounds', catchAsync(async (req, res, next) => {
+    if(!req.body.campground) throw new ExpressError('Invalid Campground Data', 400);
     const campground = new Campground(req.body.campground);
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`);
@@ -66,10 +68,15 @@ app.delete('/campgrounds/:id', catchAsync(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
     res.redirect('/campgrounds');
-}));
+})); 
+
+app.all('*', (req, res, next) => {    //this will target all routes. And the star makes it for every path
+    next(new ExpressError('Page Not Found', 404))
+});
 
 app.use((err, req, res, next) => {
-    res.send("Oh boy, something went wrong!");
+    const { statusCode = 500, message = 'Something went wrong' } = err;   //the "= 500" on the statusCode is just defaulting to 500, same with message
+    res.status(statusCode).send(message);
 });
 
 app.listen(3000, () => {
