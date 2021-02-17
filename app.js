@@ -75,8 +75,9 @@ app.all('*', (req, res, next) => {    //this will target all routes. And the sta
 });
 
 app.use((err, req, res, next) => {
-    const { statusCode = 500, message = 'Something went wrong' } = err;   //the "= 500" on the statusCode is just defaulting to 500, same with message
-    res.status(statusCode).send(message);
+    const { statusCode = 500 } = err;   //the "= 500" on the statusCode is just defaulting to 500
+    if (!err.message) err.message = 'Oh No, Something Went Wrong!'
+    res.status(statusCode).render('error');
 });
 
 app.listen(3000, () => {
