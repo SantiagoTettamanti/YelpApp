@@ -32,6 +32,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.urlencoded({ extended: true }));  //this will allow the body from our post request to be parced
 app.use(methodOverride('_method'));
+app.use(express.static('public'))
 
 
 
