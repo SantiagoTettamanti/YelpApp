@@ -5,6 +5,10 @@ const ejsMate = require('ejs-mate');
 const session = require('express-session');
 const flash = require('connect-flash');
 const { campgroundSchema, reviewSchema } = require('./schemas.js');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user');
+
 
 const ExpressError = require('./utilities/ExpressError');
 const methodOverride = require('method-override');
@@ -50,11 +54,19 @@ const sessionConfig = {
 app.use(session(sessionConfig));
 app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));   //hello passport, I want you to use my LocalStrategy. And for that LocalStrategy the authentication method is located on our User model and is called 'authenticate' (which comes pre-set as a static method with passport)
+
+passport.serializeUser(User.serializeUser());  //how to store a user in a session
+passport.deserializeUser(User.deserializeUser());  //how to 'unstore' a user from a session
+
 app.use((req, res, next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
-})
+});
+
 
 
 app.use('/campgrounds', campgrounds);
