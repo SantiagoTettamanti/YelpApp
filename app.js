@@ -6,7 +6,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const ExpressError = require('./utilities/ExpressError');
 const methodOverride = require('method-override');
-const { campgroundSchema, reviewSchema } = require('./schemas.js');
+// const { campgroundSchema, reviewSchema } = require('./schemas.js');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/user');
@@ -14,8 +14,8 @@ const User = require('./models/user');
 
 
 
-const Campground = require('./models/Campground');
-const Review = require('./models/review');
+// const Campground = require('./models/Campground');
+// const Review = require('./models/review');
 
 
 const userRoutes = require('./routes/users');
