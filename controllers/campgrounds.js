@@ -1,4 +1,4 @@
-const Campground = require('../models/Campground');
+const Campground = require('../models/campground');
 
 
 module.exports.index = async (req, res) => {
